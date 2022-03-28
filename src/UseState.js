@@ -1,25 +1,47 @@
 import React from "react";
 
+const SECURITY_CODE = 'paradigma';
+
 function UseState({ name }) {
+  const [state, setState] = React.useState({
+    value: '',
+    error: false,
+    loading: false,
+  });
+
+  const [value, setValue] = React.useState('');
   const [error, setError] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
 
   React.useEffect(() => {
-    console.log("Empezando el efecto");
-
-    if (!!loading) {
+    if (!!state.loading) {
+      setState({
+        ...state,
+        error: false,
+      });
       setTimeout(() => {
-        console.log("Haciendo la Validación");
+        if(state.value === SECURITY_CODE) {
+          setState({
+            ...state,
+            loading: false,
+            error: false,
+          });
 
-        setLoading(false);
-
-        console.log("Terminando la Validación");
+        } else {
+          setState({
+            ...state,
+            loading: false,
+            error: true,
+          });
+        }
+        
       }, 3000);
     }
-    console.log("Terminando el efecto");
-  }, [loading]); /*Aca hay que agregar que se va afectar por el useEffect*/
+  }, [state.loading]); /*Aca hay que agregar que se va afectar por el useEffect*/
 
   /*useEffect se explica muy bien en el Curso de React.js: Manejo Profesional del Estado, en Efectos con useEffect */
+
+  console.log(state);
 
   return (
     <div>
@@ -27,13 +49,25 @@ function UseState({ name }) {
 
       <p>Por Favor, escribe el Código de seguridad.</p>
 
-      {error /* esta cosita hermosa me va servir para mostrar un mensaje de error */ && (
+      {state.error /* esta cosita hermosa me va servir para mostrar un mensaje de error */ && (
         <p>Error: Código de seguridad incorrecto.</p>
       )}
-      {loading && <p>Cargando...</p>}
+      {state.loading && <p>Cargando...</p>}
 
-      <input placeholder="Código de seguridad" />
-      <button onClick={() => setLoading(true)}>Comprobar</button>
+      <input
+      placeholder="Código de seguridad"
+      value = {state.value}
+      onChange = {(event) => {setState({
+        ...state,
+        value: event.target.value,
+      })}}
+      />
+      <button onClick={() => {
+        setState({
+          ...state,
+          loading: true,
+        });
+      }}>Comprobar</button>
     </div>
   );
 }
