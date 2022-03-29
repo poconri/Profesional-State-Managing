@@ -1,4 +1,4 @@
-import { UseState } from './UseState.js';
+import { UseState } from './UseStateImperative.js';
 import { ClassState } from './ClassState.js';
 import './App.css';
 
